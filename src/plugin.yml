@@ -1,0 +1,45 @@
+name: QuickSell
+version: 2.0.6
+author: mrCookieSlime
+website: http://mrcookieslime.github.io/
+depend: [Vault]
+softdepend: [CS-CoreLib, mcMMO, Citizens, PrisonGems]
+
+main: me.mrCookieSlime.QuickSell.QuickSell
+
+commands:
+  sell:
+    description: Allows you to quickly sell your Items
+    usage: /sell
+  booster:
+    description: Starts a Booster
+    usage: /booster <Player> <Multiplier> <Duration in Minutes>
+  pbooster:
+    description: Starts a private Booster
+    usage: /pbooster <Player> <Multiplier> <Duration in Minutes>
+  quicksell:
+    description: Allows you to manage your Shops
+    usage: /quicksell
+  boosters:
+    description: Shows you all active Boosters
+    usage: /boosters
+  sellall:
+    description: Allows you to quickly sell all your Items to a specific Shop
+    usage: /sellall <Shop>
+  prices:
+    description: Allows you to see what Items can be sold in your Shop
+    usage: /prices <Shop>
+
+permissions:
+  QuickSell.sign.create:
+    description: Allows you to create SELL Signs
+    default: op
+  QuickSell.booster:
+    description: Allows you to create a Booster
+    default: op
+  QuickSell.manage:
+    description: Allows you to manage Shops
+    default: op
+  QuickSell.prices:
+    description: Allows you to do /prices
+    default: op
