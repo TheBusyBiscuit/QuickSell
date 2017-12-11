@@ -19,6 +19,7 @@ import me.mrCookieSlime.QuickSell.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterMenu;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
+import me.mrCookieSlime.QuickSell.boosters.GemBoosterListener;
 import me.mrCookieSlime.QuickSell.boosters.MCMMOBoosterListener;
 import me.mrCookieSlime.QuickSell.boosters.PrivateBooster;
 import me.mrCookieSlime.QuickSell.boosters.XPBoosterListener;
