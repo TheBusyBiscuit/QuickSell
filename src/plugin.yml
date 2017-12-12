@@ -1,6 +1,6 @@
 name: QuickSell
 version: 2.0.7
-author: mrCookieSlime, PixelSquared
+authors: [mrCookieSlime, PixelSquared]
 website: http://mrcookieslime.github.io/
 depend: [Vault]
 softdepend: [CS-CoreLib, mcMMO, Citizens, PrisonGems]
