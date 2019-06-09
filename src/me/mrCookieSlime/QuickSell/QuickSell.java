@@ -9,6 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import me.mrCookieSlime.CSCoreLibPlugin.PluginUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Localization;
@@ -19,21 +29,11 @@ import me.mrCookieSlime.QuickSell.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterMenu;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
-import me.mrCookieSlime.QuickSell.boosters.MCMMOBoosterListener;
 import me.mrCookieSlime.QuickSell.boosters.PrivateBooster;
 import me.mrCookieSlime.QuickSell.boosters.XPBoosterListener;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.milkbowl.vault.economy.Economy;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public class QuickSell extends JavaPlugin {
 	
@@ -178,9 +178,7 @@ public class QuickSell extends JavaPlugin {
 			new SellListener(this);
 			new XPBoosterListener(this);
 			
-			if (isMCMMOInstalled()) new MCMMOBoosterListener(this);
 			if (isCitizensInstalled()) new CitizensListener(this);
-			if (isPrisonGemsInstalled()) new GemBoosterListener(this);
 			
 			for (int i = 0; i < 1000; i++) {
 				if (new File("data-storage/QuickSell/boosters/" + i + ".booster").exists()) {
@@ -257,7 +255,7 @@ public class QuickSell extends JavaPlugin {
 					}
 					else ShopMenu.openMenu((Player) sender);
 				}
-				else sender.sendMessage("This Command is only for Players");	
+				else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "This Command is only for Players"));	
 			}
 			else local.sendTranslation((Player) sender, "commands.disabled", false);
 		}
@@ -282,7 +280,7 @@ public class QuickSell extends JavaPlugin {
 					}
 					else local.sendTranslation(sender, "commands.sellall.usage", false);
 				}
-				else sender.sendMessage("This Command is only for Players");
+				else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "This Command is only for Players"));
 			}
 			else local.sendTranslation(sender, "commands.disabled", false);
 		}
@@ -309,7 +307,7 @@ public class QuickSell extends JavaPlugin {
 				}
 				else local.sendTranslation(sender, "commands.prices.permission", false);
 			}
-			else sender.sendMessage("This Command is only for Players");
+			else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "This Command is only for Players"));
 		}
 		else if (cmd.getName().equalsIgnoreCase("booster")) {
 			if (args.length == 4) {
@@ -322,39 +320,18 @@ public class QuickSell extends JavaPlugin {
 						}
 						else {
 							for (BoosterType bt: BoosterType.values()) {
-								switch (bt) {
-								case CASINO:
-									break;
-								case MCMMO: {
-									if (isMCMMOInstalled()) {
-										Booster booster = new Booster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-										booster.activate();
-									}
-									break;
-								}
-								case PRISONGEMS: {
-									if (isPrisonGemsInstalled()) {
-										Booster booster = new Booster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-										booster.activate();
-									}
-									break;
-								}
-								default: {
-									Booster booster = new Booster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-									booster.activate();
-									break;
-								}
-								}
+								Booster booster = new Booster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
+								booster.activate();
 							}
 						}
 					}
 					catch(NumberFormatException x) {
-						sender.sendMessage("§4Usage: §c/booster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Usage: &c/booster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>"));
 					}
 				}
 				else local.sendTranslation(sender, "commands.booster.permission", false);
 			}
-			else sender.sendMessage("§4Usage: §c/booster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>");
+			else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Usage: &c/booster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>"));
 		}
 		else if (cmd.getName().equalsIgnoreCase("pbooster")) {
 			if (args.length == 4) {
@@ -367,43 +344,22 @@ public class QuickSell extends JavaPlugin {
 						}
 						else {
 							for (BoosterType bt: BoosterType.values()) {
-								switch (bt) {
-								case CASINO:
-									break;
-								case MCMMO: {
-									if (isMCMMOInstalled()) {
-										PrivateBooster booster = new PrivateBooster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-										booster.activate();
-									}
-									break;
-								}
-								case PRISONGEMS: {
-									if (isPrisonGemsInstalled()) {
-										PrivateBooster booster = new PrivateBooster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-										booster.activate();
-									}
-									break;
-								}
-								default: {
-									PrivateBooster booster = new PrivateBooster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
-									booster.activate();
-									break;
-								}
-								}
+								PrivateBooster booster = new PrivateBooster(bt, args[1], Double.valueOf(args[2]), Integer.parseInt(args[3]));
+								booster.activate();
 							}
 						}
 					}
 					catch(NumberFormatException x) {
-						sender.sendMessage("§4Usage: §c/pbooster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Usage: &c/pbooster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>"));
 					}
 				}
 				else local.sendTranslation(sender, "commands.booster.permission", false);
 			}
-			else sender.sendMessage("§4Usage: §c/pbooster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>");
+			else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Usage: &c/pbooster <all/monetary/prisongems/exp/mcmmo/casino> <Name of the Player> <Multiplier> <Duration in Minutes>"));
 		}
 		else if (cmd.getName().equalsIgnoreCase("boosters")) {
 			if (sender instanceof Player) BoosterMenu.showBoosterOverview((Player) sender);
-			else sender.sendMessage("This Command is only for Players");
+			else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "This Command is only for Players"));
 		}
 		else if (cmd.getName().equalsIgnoreCase("quicksell")) {
 			if (sender instanceof ConsoleCommandSender || sender.hasPermission("QuickSell.manage")) {
@@ -416,7 +372,7 @@ public class QuickSell extends JavaPlugin {
 						if (sender instanceof Player) editor.openEditor((Player) sender);
 					}
 					else if (args[0].equalsIgnoreCase("edit")) {
-						sender.sendMessage("§4DEPRECATED! Use §c/quicksell editor §4instead!");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4DEPRECATED! Use &c/quicksell editor &4instead!"));
 						if (args.length == 4) {
 							if (Shop.getShop(args[1]) != null) {
 								boolean number = true;
@@ -438,7 +394,7 @@ public class QuickSell extends JavaPlugin {
 						else local.sendTranslation(sender, "commands.usage", false, new Variable("%usage%", "/quicksell edit <ShopName> <Item> <Price>"));
 					}
 					else if (args[0].equalsIgnoreCase("create")) {
-						sender.sendMessage("§4DEPRECATED! Use §c/quicksell editor §4instead!");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4DEPRECATED! Use &c/quicksell editor &4instead!"));
 						if (args.length == 2) {
 							List<String> list = new ArrayList<String>();
 							for (Shop shop: Shop.list()) {
@@ -453,7 +409,7 @@ public class QuickSell extends JavaPlugin {
 						else local.sendTranslation(sender, "commands.usage", false, new Variable("%usage%", "/quicksell create <ShopName>"));
 					}
 					else if (args[0].equalsIgnoreCase("delete")) {
-						sender.sendMessage("§4DEPRECATED! Use §c/quicksell editor §4instead!");
+						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4DEPRECATED! Use &c/quicksell editor &4instead!"));
 						if (Shop.getShop(args[1]) == null) local.sendTranslation(sender, "messages.unknown-shop", false);
 						else if (args.length == 2) {
 							List<String> list = new ArrayList<String>();
@@ -470,37 +426,37 @@ public class QuickSell extends JavaPlugin {
 					}
 					else if (args[0].equalsIgnoreCase("linknpc")) {
 						if (!isCitizensInstalled()) {
-							sender.sendMessage("§4You do not have Citizens installed!");
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4You do not have Citizens installed!"));
 							return true;
 						}
 						
 						if (args.length == 3) {
 							NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
-							if (npc == null) sender.sendMessage("§cYou must select an NPC before linking it!");
+							if (npc == null) sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou must select an NPC before linking it!"));
 							else if (Shop.getShop(args[1]) == null) local.sendTranslation(sender, "messages.unknown-shop", false);
 							else if (!args[2].equalsIgnoreCase("sell") && !args[2].equalsIgnoreCase("sellall"));
 							else {
 								npcs.setValue(String.valueOf(npc.getId()), args[1] + " ; " + args[2].toUpperCase());
 								npcs.save();
-								sender.sendMessage(npc.getName() + " §7is now a Remote §r" + StringUtils.format(args[2]) + "§7Shop for the Shop §r" + args[1] + "§7");
+								sender.sendMessage(ChatColor.translateAlternateColorCodes('&', npc.getName() + " &7is now a Remote &r" + StringUtils.format(args[2]) + "&7Shop for the Shop &r" + args[1] + "&7"));
 							}
 						}
 						else local.sendTranslation(sender, "commands.usage", false, new Variable("%usage%", "/quicksell linknpc <ShopName> <sell/sellall>"));
 					}
 					else if (args[0].equalsIgnoreCase("unlinknpc")) {
 						if (!isCitizensInstalled()) {
-							sender.sendMessage("§4You do not have Citizens installed!");
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4You do not have Citizens installed!"));
 							return true;
 						}
 						
 						NPC npc = CitizensAPI.getDefaultNPCSelector().getSelected(sender);
-						if (npc == null) sender.sendMessage("§cYou must select an NPC before linking it!");
+						if (npc == null) sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou must select an NPC before linking it!"));
 						else if (npcs.contains(String.valueOf(npc.getId()))) {
 							npcs.setValue(String.valueOf(npc.getId()), null);
 							npcs.save();
-							sender.sendMessage(npc.getName() + " §cis no longer linked to any Shop!");
+							sender.sendMessage(ChatColor.translateAlternateColorCodes('&', npc.getName() + " &cis no longer linked to any Shop!"));
 						}
-						else sender.sendMessage(npc.getName() + " §cis not linked to any Shop!");
+						else sender.sendMessage(ChatColor.translateAlternateColorCodes('&', npc.getName() + " &cis not linked to any Shop!"));
 					}
 					else if (args[0].equalsIgnoreCase("stopboosters")) {
 						if (args.length == 2) {
@@ -535,16 +491,16 @@ public class QuickSell extends JavaPlugin {
 	}
 	
 	private void sendHelpMessager(CommandSender sender) {
-		sender.sendMessage("");
-		sender.sendMessage("§e§lQuickSell v" + getDescription().getVersion() + " by §6mrCookieSlime");
-		sender.sendMessage("");
-		sender.sendMessage("§7\u21E8 /quicksell: §bDisplays this Help Menu");
-		sender.sendMessage("§7\u21E8 /quicksell reload: §bReloads all of QuickSell's Files and Systems");
-		sender.sendMessage("§7\u21E8 /quicksell editor: §bOpens up the Ingame Shop Editor");
-		sender.sendMessage("§7\u21E8 /quicksell stopboosters [Player]: §bStops certain Boosters");
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&e&lQuickSell v" + getDescription().getVersion() + " by &6mrCookieSlime"));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell: &bDisplays this Help Menu"));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell reload: &bReloads all of QuickSell's Files and Systems"));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell editor: &bOpens up the Ingame Shop Editor"));
+		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell stopboosters [Player]: &bStops certain Boosters"));
 		if (isCitizensInstalled()) {
-			sender.sendMessage("§7\u21E8 /quicksell linknpc <Shop> <sell/sellall>: §bLinks a Citizens NPC to a Shop");
-			sender.sendMessage("§7\u21E8 /quicksell unlinknpc: §bUnlinks your selected NPC from a Shop");
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell linknpc <Shop> <sell/sellall>: &bLinks a Citizens NPC to a Shop"));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7\u21E8 /quicksell unlinknpc: &bUnlinks your selected NPC from a Shop"));
 		}
 	}
 

@@ -277,12 +277,8 @@ public class Booster {
 		switch(type) {
 		case EXP:
 			return "Booster (Experience)";
-		case MCMMO:
-			return "Booster (mcMMO)";
 		case MONETARY:
 			return "Booster (Money)";
-		case PRISONGEMS:
-			return "Booster (Gems)";
 		default:
 			return "Booster";
 		}

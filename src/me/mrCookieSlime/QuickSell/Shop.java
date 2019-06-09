@@ -5,6 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Variable;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -14,15 +22,6 @@ import me.mrCookieSlime.PrisonUtils.Backpacks;
 import me.mrCookieSlime.QuickSell.SellEvent.Type;
 import me.mrCookieSlime.QuickSell.boosters.Booster;
 import me.mrCookieSlime.QuickSell.boosters.BoosterType;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class Shop {
 	
@@ -34,7 +33,6 @@ public class Shop {
     ItemStack unlocked, locked;
     String name;
 	
-	@SuppressWarnings("deprecation")
 	public Shop(String id) {
 		this.shop = id;
 		this.prices = new PriceInfo(this);
@@ -49,10 +47,7 @@ public class Shop {
 			lore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
-		MaterialData md = null;
-		if (QuickSell.cfg.getString("shops." + shop + ".itemtype").contains("-")) md = new MaterialData(Material.getMaterial(QuickSell.cfg.getString("shops." + shop + ".itemtype").split("-")[0]), (byte) Integer.parseInt(QuickSell.cfg.getString("shops." + shop + ".itemtype").split("-")[1])); 
-		else md = new MaterialData(Material.getMaterial(QuickSell.cfg.getString("shops." + shop + ".itemtype")));
-		unlocked = new CustomItem(md, name, lore.toArray(new String[lore.size()]));
+		unlocked = new CustomItem(Material.getMaterial(QuickSell.cfg.getString("shops." + shop + ".itemtype")), name, lore.toArray(new String[lore.size()]));
 		
 		lore = new ArrayList<String>();
 		lore.add(ChatColor.translateAlternateColorCodes('&', QuickSell.local.getTranslation("messages.no-access").get(0)));
@@ -60,10 +55,7 @@ public class Shop {
 			lore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		
-		MaterialData md2 = null;
-		if (QuickSell.cfg.getString("options.locked-item").contains("-")) md2 = new MaterialData(Material.getMaterial(QuickSell.cfg.getString("options.locked-item").split("-")[0]), (byte) Integer.parseInt(QuickSell.cfg.getString("options.locked-item").split("-")[1])); 
-		else md2 = new MaterialData(Material.getMaterial(QuickSell.cfg.getString("options.locked-item")));
-		locked = new CustomItem(md2, name, lore.toArray(new String[lore.size()]));
+		locked = new CustomItem(Material.getMaterial(QuickSell.cfg.getString("options.locked-item")), name, lore.toArray(new String[lore.size()]));
 		
 		shops.add(this);
 		map.put(this.shop.toLowerCase(), this);

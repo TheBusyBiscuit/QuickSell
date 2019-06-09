@@ -54,18 +54,20 @@ public class SellListener implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (e.getClickedBlock().getType() == Material.SIGN_POST || e.getClickedBlock().getType() == Material.WALL_SIGN) {
-				if (((Sign) e.getClickedBlock().getState()).getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sign-prefix")))) {
-					Shop shop = Shop.getShop(((Sign) e.getClickedBlock().getState()).getLine(1));
+			if (e.getClickedBlock().getState() instanceof Sign) {
+				Sign sign = (Sign) e.getClickedBlock().getState();
+				
+				if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sign-prefix")))) {
+					Shop shop = Shop.getShop(sign.getLine(1));
 					if (shop != null) ShopMenu.open(e.getPlayer(), shop);
 					else ShopMenu.openMenu(e.getPlayer());
 					e.setCancelled(true);
 				}
-				else if (((Sign) e.getClickedBlock().getState()).getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix")))) {
-					Shop shop = Shop.getShop(((Sign) e.getClickedBlock().getState()).getLine(1));
+				else if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix")))) {
+					Shop shop = Shop.getShop(sign.getLine(1));
 					if (shop != null) {
 						if (shop.hasUnlocked(e.getPlayer())) {
-							String item = ((Sign) e.getClickedBlock().getState()).getLine(2);
+							String item = sign.getLine(2);
 							item = item.toUpperCase();
 							if (item.contains(" ")) item = item.replace(" ", "_");
 							shop.sellall(e.getPlayer(), item, Type.SELLALL);
@@ -74,7 +76,7 @@ public class SellListener implements Listener {
 					}
 					else if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
 						if (Shop.getHighestShop(e.getPlayer()) != null) {
-							String item = ((Sign) e.getClickedBlock().getState()).getLine(2);
+							String item = sign.getLine(2);
 							item = item.toUpperCase();
 							if (item.contains(" ")) item = item.replace(" ", "_");
 							Shop.getHighestShop(e.getPlayer()).sellall(e.getPlayer(), item, Type.SELLALL);
@@ -87,17 +89,19 @@ public class SellListener implements Listener {
 			}
 		}
 		else if (e.getAction() == Action.LEFT_CLICK_BLOCK && e.getPlayer().getGameMode() != GameMode.CREATIVE) {
-			if (e.getClickedBlock().getType() == Material.SIGN_POST || e.getClickedBlock().getType() == Material.WALL_SIGN) {
-				if (((Sign) e.getClickedBlock().getState()).getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sign-prefix")))) {
-					Shop shop = Shop.getShop(((Sign) e.getClickedBlock().getState()).getLine(1));
+			if (e.getClickedBlock().getState() instanceof Sign) {
+				Sign sign = (Sign) e.getClickedBlock().getState();
+				
+				if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sign-prefix")))) {
+					Shop shop = Shop.getShop(sign.getLine(1));
 					if (shop != null) shop.showPrices(e.getPlayer());
 					else if (QuickSell.cfg.getBoolean("options.open-only-shop-with-permission")) {
 						if (Shop.getHighestShop(e.getPlayer()) != null) Shop.getHighestShop(e.getPlayer()).showPrices(e.getPlayer());
 						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);
 					}
 				}
-				else if (((Sign) e.getClickedBlock().getState()).getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix")))) {
-					Shop shop = Shop.getShop(((Sign) e.getClickedBlock().getState()).getLine(1));
+				else if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', QuickSell.cfg.getString("options.sellall-sign-prefix")))) {
+					Shop shop = Shop.getShop(sign.getLine(1));
 					if (shop != null) {
 						if (shop.hasUnlocked(e.getPlayer())) shop.showPrices(e.getPlayer());
 						else QuickSell.local.sendTranslation(e.getPlayer(), "messages.no-access", false);

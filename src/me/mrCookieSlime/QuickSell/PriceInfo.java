@@ -12,7 +12,6 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.String.StringUtils;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 public class PriceInfo {
 	
@@ -24,7 +23,6 @@ public class PriceInfo {
 	
 	private static final Map<String, PriceInfo> map = new HashMap<String, PriceInfo>();
 	
-	@SuppressWarnings("deprecation")
 	public PriceInfo(Shop shop) {
 		this.shop = shop;
 		this.prices = new HashMap<String, Double>();
@@ -43,27 +41,17 @@ public class PriceInfo {
 		for (String item: prices.keySet()) {
 			if (info.size() >= 54) break;
 			if (Material.getMaterial(item) != null) {
-				info.put(item, new CustomItem(Material.getMaterial(item), "§r" + StringUtils.formatItemName(new ItemStack(Material.getMaterial(item)), false), 0, new String[] {"", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)}));
+				info.put(item, new CustomItem(Material.getMaterial(item), "&r" + StringUtils.formatItemName(new ItemStack(Material.getMaterial(item)), false), "", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)));
 				order.add(item);
 			}
 			else if (item.split("-").length > 1) {
-				boolean data = true;
-				try {
-					Integer.parseInt(item.split("-")[1]);
-				} catch(NumberFormatException x) {
-					data = false;
-				}
 				if (Material.getMaterial(item.split("-")[0]) != null) {
-					if (data) {
-						info.put(item, new CustomItem(new CustomItem(new MaterialData(Material.getMaterial(item.split("-")[0]), (byte) Integer.parseInt(item.split("-")[1])), "§r" + StringUtils.formatItemName(new MaterialData(Material.getMaterial(item.split("-")[0]), (byte) Integer.parseInt(item.split("-")[1])).toItemStack(1), false), new String[] {"", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)})));
-						order.add(item);
-					}
-					else if (!item.split("-")[1].equals("nodata")) {
-						info.put(item, new CustomItem(new CustomItem(Material.getMaterial(item.split("-")[0]), item.split("-")[1], 0, new String[] {"", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)}), getAmount()));
+					if (!item.split("-")[1].equals("nodata")) {
+						info.put(item, new CustomItem(new CustomItem(Material.getMaterial(item.split("-")[0]), item.split("-")[1], "", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)), getAmount()));
 						order.add(item);
 					}
 					else {
-						info.put(item, new CustomItem(Material.getMaterial(item.split("-")[0]), "§r" + StringUtils.formatItemName(new ItemStack(Material.getMaterial(item.split("-")[0])), false), 0, new String[] {"", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)}));
+						info.put(item, new CustomItem(Material.getMaterial(item.split("-")[0]), "&r" + StringUtils.formatItemName(new ItemStack(Material.getMaterial(item.split("-")[0])), false), "", "&7Worth (1): &6" + DoubleHandler.getFancyDouble(getPrices().get(item)), "&7Worth (64): &6" + DoubleHandler.getFancyDouble(getPrices().get(item) * 64)));
 						order.add(item);
 					}
 				}
@@ -114,21 +102,14 @@ public class PriceInfo {
 		return prices.get(string);
 	}
 	
-	@SuppressWarnings("deprecation")
 	public String toString(ItemStack item) {
 		if (item == null) return "null";
-		String name = item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName().replace("§", "&"): "": "";
+		String name = item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName().replace("&", "&"): "": "";
 		if (!name.equalsIgnoreCase("") && prices.containsKey(item.getType().toString() + "-" + name))  {
 			return item.getType().toString() + "-" + name;
 		}
-		else if (item.isSimilar(item.getData().toItemStack(item.getAmount())) && prices.containsKey(item.getType().toString() + "-" + item.getData().getData() + "-nodata"))  {
-			return item.getType().toString() + "-" + item.getData().getData() + "-nodata";
-		}
 		else if (item.isSimilar(new ItemStack(item.getType(), item.getAmount())) && prices.containsKey(item.getType().toString() + "-nodata"))  {
 			return item.getType().toString() + "-nodata";
-		}
-		else if (prices.containsKey(item.getType().toString() + "-" + item.getData().getData()))  {
-			return item.getType().toString() + "-" + item.getData().getData();
 		}
 		else if (prices.containsKey(item.getType().toString()))  {
 			return item.getType().toString();
