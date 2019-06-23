@@ -25,3 +25,4 @@ assignees: ''
 <!-- "latest" IS NOT A VERSION NUMBER. -->
 
  - Minecraft Version:
+ - QuickSell Version:
