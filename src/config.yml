@@ -1,7 +1,7 @@
 options:
   auto-update: true
   sell-gui-rows: 3
-  locked-item: STAINED_GLASS_PANE-14
+  locked-item: BARRIER
   sign-prefix: '&7[&eSell&7]'
   sellall-sign-prefix: '&a&oSell All'
   pregenerate-all-item-prices: false
